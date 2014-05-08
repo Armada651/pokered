@@ -38827,10 +38827,13 @@ OaksLabText5: ; 1d248 (7:5248)
 	ld b, $96
 	ld a, [$FFDC] ; number of pokemon owned
 	cp b
-	jr c, .asm_0f042 ; 0x1d29f
+	jr c, .skip
 	ld hl, OaksLabMewBattleText
 	call PrintText
 	call WaitForTextScrollButtonPress
+	ld bc,(MEW << 8) | 5
+	call GivePokemon
+.skip
 	jr .asm_0f042 ; 0x1d29f
 .asm_b28b0 ; 0x1d279
 	ld b,POKE_BALL
