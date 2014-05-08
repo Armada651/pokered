@@ -476,3 +476,24 @@ _UnnamedText_4424c:: ; 95b6f (25:5b6f)
 	cont "Congratulations!"
 	done
 
+_OaksLabMewBattleText::
+	text $52, ", several"
+	line "years ago DR.FUJI"
+	cont "went on an"
+	cont "expedition."
+
+	para "He returned with a"
+	line "newly discovered"
+	cont "#MON!"
+
+	para "He entrusted that"
+	line "#MON to me."
+
+	para "I will pass it on"
+	line "to you."
+
+	para "But first I will"
+	line "need to test your"
+	cont "skill myself!"
+	done
+

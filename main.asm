@@ -38824,7 +38824,14 @@ OaksLabText5: ; 1d248 (7:5248)
 	ld [$cc3c], a
 	ld a, $56
 	call Predef
-	jp .asm_0f042
+	ld b, $96
+	ld a, [$FFDC] ; number of pokemon owned
+	cp b
+	jr c, .asm_0f042 ; 0x1d29f
+	ld hl, OaksLabMewBattleText
+	call PrintText
+	call WaitForTextScrollButtonPress
+	jr .asm_0f042 ; 0x1d29f
 .asm_b28b0 ; 0x1d279
 	ld b,POKE_BALL
 	call IsItemInBag
@@ -38915,6 +38922,10 @@ OaksLabPleaseVisitText: ; 1d318 (7:5318)
 
 UnnamedText_1d31d: ; 1d31d (7:531d)
 	TX_FAR _UnnamedText_1d31d
+	db "@"
+
+OaksLabMewBattleText:
+	TX_FAR _OaksLabMewBattleText
 	db "@"
 
 OaksLabText34: ; 1d322 (7:5322)
