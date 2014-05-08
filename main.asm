@@ -37872,6 +37872,8 @@ OaksLabScriptPointers: ; 1cb28 (7:4b28)
 	dw OaksLabScript16
 	dw OaksLabScript17
 	dw OaksLabScript18
+	dw OaksLabMewBattleScript
+	dw OaksLabAwardMewScript
 
 OaksLabScript0: ; 1cb4e (7:4b4e)
 	ld a, [$d74b]
@@ -38555,6 +38557,41 @@ OaksLabScript_1d076: ; 1d076 (7:5076)
 	ld [W_MAPTEXTPTR+1], a
 	ret
 
+OaksLabMewBattleScript:
+	; define which team oak uses, and fight it
+	ld a, PROF_OAK + $C8
+	ld [W_CUROPPONENT], a
+	ld a, [W_RIVALSTARTER]
+	cp SQUIRTLE
+	jr nz, .NotSquirtle ; 0x1cdc9 $4
+	ld a, $1
+	jr .done ; 0x1cdcd $a
+.NotSquirtle
+	cp BULBASAUR
+	jr nz, .Charmander ; 0x1cdd1 $4
+	ld a, $2
+	jr .done ; 0x1cdd5 $2
+.Charmander
+	ld a, $3
+.done
+	ld [W_TRAINERNO], a
+	ld hl, OaksLabMewBattleText
+	ld de, OaksLabMewBattleText
+	call PreBattleSaveRegisters
+
+	ld a, $14
+	ld [W_OAKSLABCURSCRIPT], a
+	ret
+
+OaksLabAwardMewScript:
+	ld a, $27
+	ld [$ff8c], a
+	call DisplayTextID
+
+	ld a, $12
+	ld [W_OAKSLABCURSCRIPT], a
+	ret
+
 OaksLabTextPointers: ; 1d082 (7:5082)
 	dw OaksLabText1
 	dw OaksLabText2
@@ -38594,6 +38631,7 @@ OaksLabTextPointers: ; 1d082 (7:5082)
 	dw OaksLabText36
 	dw OaksLabText37
 	dw OaksLabText38
+	dw OaksLabAwardMewText
 
 OaksLabText28: ; 1d0ce (7:50ce)
 OaksLabText1: ; 1d0ce (7:50ce)
@@ -38827,12 +38865,11 @@ OaksLabText5: ; 1d248 (7:5248)
 	ld b, $96
 	ld a, [$FFDC] ; number of pokemon owned
 	cp b
-	jr c, .skip
+	jr nz, .skip
 	ld hl, OaksLabMewBattleText
 	call PrintText
-	call WaitForTextScrollButtonPress
-	ld bc,(MEW << 8) | 5
-	call GivePokemon
+	ld a, $13
+	ld [W_OAKSLABCURSCRIPT], a
 .skip
 	jr .asm_0f042 ; 0x1d29f
 .asm_b28b0 ; 0x1d279
@@ -39098,6 +39135,12 @@ OaksLabText10: ; 1d3fb (7:53fb)
 UnnamedText_1d405: ; 1d405 (7:5405)
 	TX_FAR _UnnamedText_1d405
 	db "@"
+
+OaksLabAwardMewText:
+	db $08 ; asm
+	ld bc,(MEW << 8) | 5
+	call GivePokemon
+	jp TextScriptEnd
 
 OaksLabObject: ; 0x1d40a (size=88)
 	db $3 ; border tile
